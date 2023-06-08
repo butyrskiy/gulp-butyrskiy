@@ -1,2 +1,3 @@
-import './_components.js';
-import './_functions.js';
+import { test } from "./functions/function";
+
+test();
