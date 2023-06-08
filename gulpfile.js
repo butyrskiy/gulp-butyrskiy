@@ -6,6 +6,9 @@ const rename = require('gulp-rename');
 const cleanCss = require('gulp-clean-css');
 const autoprefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
+const webpackStream = require('webpack-stream');
+const uglify = require('gulp-uglify-es').default;
+const notify = require("gulp-notify");
 const browserSync = require('browser-sync').create();
 const clean = require('gulp-clean');
 const fileInclude = require('gulp-file-include');
@@ -32,7 +35,8 @@ const paths = {
   srcPartialsFolder: `${srcFolder}/partials`,
   srcFontsFolder: `${srcFolder}/resources/fonts`,
   buildFontsFolder: `${buildFolder}/fonts`,
-  srcJs: `${srcFolder}/js/**/*.js`,
+  srcJs: `${srcFolder}/js/main.js`,
+  srcAllJs: `${srcFolder}/js/**/*.js`,
   buildJsFolder: `${buildFolder}/js`,
 };
 
@@ -48,19 +52,87 @@ function styles() {
     suffix: '.min'
   }))
   .pipe(autoprefixer({ overrideBrowserslist: ['last 5 version'] }))
-  // .pipe(cleanCss({
-  //   level: 2
-  // }))
+  .pipe(cleanCss({
+    level: 2
+  }))
   .pipe(sourcemaps.write('.')) // создание «main.min.css.map»
   .pipe(dest(paths.buildCss)) // сюда кладём скомпилированный css
   .pipe(browserSync.stream())
 }
 
-// ? Копирование js в «buils»
+// ? BUILD version. Компиляция файлов из scss в css
+function stylesBuild() {
+  return src(`${paths.srcScss}`)
+  .pipe(sass({
+    outputStyle: 'expanded'
+  }).on('error', sass.logError))
+  .pipe(rename({
+    suffix: '.min'
+  }))
+  .pipe(autoprefixer({ overrideBrowserslist: ['last 5 version'] }))
+  .pipe(cleanCss({
+    level: 2
+  }))
+  .pipe(dest(paths.buildCss))
+}
+
+// ? Компиляция JS
 function javascript() {
   return src(paths.srcJs)
+    .pipe(webpackStream({
+      output: {
+        filename: 'main.min.js'
+      },
+      module: {
+        rules: [
+          {
+            test: /\.m?js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  ['@babel/preset-env', { targets: "defaults" }]
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(uglify().on("error", notify.onError()))
+    .pipe(sourcemaps.write('.'))
     .pipe(dest(paths.buildJsFolder))
-    .pipe(browserSync.stream())
+    .pipe(browserSync.stream());
+}
+
+// ? BUILD version. Компиляция JS
+function javascriptBuild() {
+  return src(paths.srcJs)
+    .pipe(webpackStream({
+      output: {
+        filename: 'main.min.js'
+      },
+      module: {
+        rules: [
+          {
+            test: /\.m?js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  ['@babel/preset-env', { targets: "defaults" }]
+                ]
+              }
+            }
+          }
+        ],
+      },
+    }))
+    .pipe(uglify().on("error", notify.onError()))
+    .pipe(dest(paths.buildJsFolder))
 }
 
 // ? Подключение html-компоненты
@@ -150,10 +222,10 @@ function watchFiles() {
   watch(`${paths.srcImgFolder}/prepared/*.*`, imagesToBuild)
   watch(paths.srcSvg, sprite)
   watch(`${paths.srcFontsFolder}/**.ttf`, fonts)
-  watch(paths.srcJs, javascript)
+  watch(paths.srcAllJs, javascript)
 }
 
-// ? Выполнение функций по отдельности «gulp styles»
+// ? Выполнение функций по отдельности
 exports.styles = styles;
 exports.fonts = fonts;
 exports.images = images;
@@ -163,5 +235,8 @@ exports.watchFiles = watchFiles;
 exports.fileInclude = htmlInclude;
 exports.cleanBuild = cleanBuild;
 
-// ? Выполнение всех функций «gulp»
-exports.default = series(cleanBuild, htmlInclude, fonts, resourcesToBuild, sprite, styles, images, imagesToBuild, javascript, watchFiles);
+// ? Запуск сборки в режиме разработки
+exports.default = series(cleanBuild, htmlInclude, javascript, fonts, resourcesToBuild, sprite, styles, images, imagesToBuild, watchFiles);
+
+// ? Финальная версия проекта
+exports.build = series(cleanBuild, htmlInclude, javascriptBuild, fonts, resourcesToBuild, sprite, stylesBuild, images, imagesToBuild);
