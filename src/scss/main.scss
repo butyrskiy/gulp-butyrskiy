@@ -1,9 +1,12 @@
 /* Basic */
-@import "base/normalize";
-@import "vars";
-@import "mixins";
-@import "fonts";
-@import "settings";
+@import "./base/normalize";
+@import "./vars";
+@import "./mixins";
+@import "./fonts";
+@import "./settings";
 
-/* Components */
-@import "components/header";
+/* Large components */
+@import "./components/header";
+
+/* Small components */
+@import "./components/header-contacts";
