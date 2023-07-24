@@ -1,3 +1,1 @@
-import { test } from "./functions/function";
-
-test();
+import "./components/component.js";

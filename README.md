@@ -54,7 +54,7 @@ _Если этого не сделать, то нельзя будет в кон
 
 ### Работа с изображениями
 
-Изображения, попадая в папку **«src/img»** обрабатываются, складываются в папку **«src/img/prepared»** и после этого копируются в **«build/img»**
+Изображения, попадая в папку **«src/img»** обрабатываются и складываются в папку **«build/img»** в трёх форматах: avif, jpg, webp.
 
 ### Работа с JS
 
@@ -66,17 +66,17 @@ _Если этого не сделать, то нельзя будет в кон
 
 ### Работа с CSS
 
-В директории **«src/scss»** находятся только scss-файлы (за исключением **«src/scss/base/normalize.css»**). В файл **«src/scss/main.scss»** подключаются все необходимые файлы. В итоге всё компилируется в css и складывается в **«build/css»**
+В директории **«src/scss»** находятся только scss-файлы (за исключением **«src/scss/vendor/normalize.css»**). В файл **«src/scss/main.scss»** подключаются все необходимые файлы. В итоге всё компилируется в css и складывается в **«build/css»**
 
 В файле **«src/scss/global.scss»** пишутся общие стили, которые могут быть использованы в любом месте проекта.
 
 ### Работа с SVG
 
-SVG-изображения помещаем в директорию **«src/img/svg»**. После этого svg-спрайт сгенерируется автоматически и будет размещён в **«build/img»**.
+SVG-изображения помещаем в директорию **«src/img/svg»**. После этого svg-спрайт сгенерируется автоматически и будет размещён в **«build/img/stack»**.
 
 ## Build mode
 
-Команда `gulp build` запустит сборку в режиме билд версии. Её особенность в том, что не будет созданы файлы «main.min.css.map» и «main.min.js.map». Также не будет запущены функции «browserSync» и «watchFiles».
+Команда `gulp build` запустит сборку в режиме билд версии. Её особенность в том, что не будет созданы файлы «main.min.css.map» и «main.min.js.map». Также файлы «main.min.js» и «main.min.css» будут минимизированы.
 
 ---
 
@@ -84,7 +84,7 @@ SVG-изображения помещаем в директорию **«src/img/
 
 - [gulp](https://www.npmjs.com/package/gulp)
 - [gulp-sass](https://www.npmjs.com/package/gulp-sass) (работа с sass)
-- [sass](https://www.npmjs.com/package/sass) (работа с sass)
+- [sass](https://www.npmjs.com/package/sass)
 - [gulp-rename](https://www.npmjs.com/package/gulp-rename) (изменение имени файла)
 - [gulp-clean-css](https://www.npmjs.com/package/gulp-clean-css) (сжатие/минификация css)
 - [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer) (префиксы в CSS)
@@ -103,5 +103,5 @@ SVG-изображения помещаем в директорию **«src/img/
 - [webpack-stream](https://www.npmjs.com/package/webpack-stream) (сборка JS-файлов)
 
 > ### Спасибо за интерес к данной сборке
->
-> По мере добавления, изменения чего-то в сборке буду обновлять также readme-файл.
+
+> По вопросам и предложениям - [contacts](https://taplink.cc/butyrskiy)

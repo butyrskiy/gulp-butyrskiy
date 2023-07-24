@@ -1,5 +1,7 @@
+/* Vendor */
+@import "./vendor/normalize";
+
 /* Basic */
-@import "./base/normalize";
 @import "./vars";
 @import "./mixins";
 @import "./fonts";
