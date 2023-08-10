@@ -29,7 +29,7 @@ const paths = {
   srcResourcesFolder: `${srcFolder}/resources`,
   srcImgFolder: `${srcFolder}/img`,
   buildImgFolder: `${buildFolder}/img`,
-  srcSvg: `${srcFolder}/img/svg/**.svg`,
+  srcSvg: `${srcFolder}/img/svg-sprite/**.svg`,
   srcPartialsFolder: `${srcFolder}/partials`,
   srcFontsFolder: `${srcFolder}/resources/fonts`,
   buildFontsFolder: `${buildFolder}/fonts`,
@@ -161,13 +161,16 @@ function resourcesToBuild() {
 
 // ? Обработка изображений
 function images() {
-  return src([`${paths.srcImgFolder}/*.*`, '!src/img/*.svg'])
-    .pipe(avif({ quality: 50 }))
+  return src([`${paths.srcImgFolder}/*/*`, `${paths.srcImgFolder}/*.*`, '!src/img/**/*.svg', '!src/img/svg-sprite/**.svg'])
+    
+  // конвертацию в avif и webp при необходимости раскомментировать
+  
+    // .pipe(avif({ quality: 50 }))
 
-    .pipe(src(`${paths.srcImgFolder}/*.*`))
-    .pipe(webp())
+    // .pipe(src([`${paths.srcImgFolder}/*/*`, `${paths.srcImgFolder}/*.*`, '!src/img/**/*.svg', '!src/img/svg-sprite/**.svg']))
+    // .pipe(webp())
 
-    .pipe(src(`${paths.srcImgFolder}/*.*`))
+    .pipe(src([`${paths.srcImgFolder}/*/*`, `${paths.srcImgFolder}/*.*`, '!src/img/svg-sprite/*']))
     .pipe(imagemin())
 
     .pipe(dest(paths.buildImgFolder))
@@ -184,7 +187,7 @@ function sprite() {
         }
       }
     }))
-    .pipe(dest(paths.buildImgFolder))
+    .pipe(dest(`${paths.buildImgFolder}/sprite`))
 }
 
 // ? Работа со шрифтами
