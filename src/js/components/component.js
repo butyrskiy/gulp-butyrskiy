@@ -1,3 +1,3 @@
-import { test } from "../functions/function.js";
-
-test();
+function test() {
+  console.log('test');
+}

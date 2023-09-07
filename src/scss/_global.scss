@@ -9,7 +9,7 @@ html {
 }
 
 body {
-  font-family: "Roboto";
+  font-family: var(--font-family);
 }
 
 img {
@@ -24,8 +24,8 @@ a {
 
 .container {
   margin: 0 auto;
-  padding: 0 15px;
-  max-width: 1260px;
+  padding: 0 var(--container-offset);
+  max-width: var(--container-width);
 }
 
 .is-hidden {
