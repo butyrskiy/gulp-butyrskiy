@@ -1,9 +1,13 @@
 {
-  "name": "gulp-by-butyrskiy",
-  "version": "2.0.0",
+  "name": "project name",
+  "version": "",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "homepage": "",
+  "scripts": {
+    "predeploy": "gulp build",
+    "deploy": "gh-pages -d build"
+  },
   "author": "d.butyrskiy",
   "license": "ISC",
   "devDependencies": {
@@ -11,6 +15,7 @@
     "@babel/preset-env": "^7.22.4",
     "babel-loader": "^9.1.2",
     "browser-sync": "^2.29.3",
+    "gh-pages": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-avif": "^1.1.1",
