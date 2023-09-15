@@ -160,12 +160,13 @@ function resourcesToBuild() {
 }
 
 // ? Обработка изображений
+// Для ковертации изображений в форматы .avif и .webp расскаментриуйте код ниже
 function images() {
   return src([`${paths.srcImgFolder}/*.*`, '!src/img/*.svg'])
-    .pipe(avif({ quality: 50 }))
+    // .pipe(avif({ quality: 50 }))
 
-    .pipe(src(`${paths.srcImgFolder}/*.*`))
-    .pipe(webp())
+    // .pipe(src(`${paths.srcImgFolder}/*.*`))
+    // .pipe(webp())
 
     .pipe(src(`${paths.srcImgFolder}/*.*`))
     .pipe(imagemin())
