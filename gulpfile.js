@@ -169,7 +169,9 @@ function images() {
     // .pipe(webp())
 
     .pipe(src(`${paths.srcImgFolder}/*.*`))
-    .pipe(imagemin())
+    .pipe(imagemin([
+      imagemin.mozjpeg({quality: 85, progressive: true}),
+    ]))
 
     .pipe(dest(paths.buildImgFolder))
 }
