@@ -29,7 +29,7 @@ const paths = {
   srcResourcesFolder: `${srcFolder}/resources`,
   srcImgFolder: `${srcFolder}/img`,
   buildImgFolder: `${buildFolder}/img`,
-  srcSvg: `${srcFolder}/img/svg/**.svg`,
+  srcSvg: `${srcFolder}/img/svg-sprite/**.svg`,
   srcPartialsFolder: `${srcFolder}/partials`,
   srcFontsFolder: `${srcFolder}/resources/fonts`,
   buildFontsFolder: `${buildFolder}/fonts`,
@@ -162,13 +162,13 @@ function resourcesToBuild() {
 // ? Обработка изображений
 // Для ковертации изображений в форматы .avif и .webp расскаментриуйте код ниже
 function images() {
-  return src([`${paths.srcImgFolder}/*.*`, '!src/img/*.svg'])
+  return src([`${paths.srcImgFolder}/**/*`, '!src/img/svg-sprite/**.svg'])
     // .pipe(avif({ quality: 50 }))
 
     // .pipe(src(`${paths.srcImgFolder}/*.*`))
     // .pipe(webp())
 
-    .pipe(src(`${paths.srcImgFolder}/*.*`))
+    .pipe(src([`${paths.srcImgFolder}/**/*`, '!src/img/svg-sprite/*']))
     .pipe(imagemin([
       imagemin.mozjpeg({quality: 85, progressive: true}),
     ]))
@@ -219,7 +219,7 @@ function watchFiles() {
   watch(paths.srcHtml, htmlInclude);
   watch(`${paths.srcPartialsFolder}/*.html`, htmlInclude);
   watch(`${paths.srcResourcesFolder}/**`, resourcesToBuild);
-  watch(`${paths.srcImgFolder}/*.*`, images);
+  watch(`${paths.srcImgFolder}/**`, images);
   watch(paths.srcSvg, sprite);
   watch(`${paths.srcFontsFolder}/**.ttf`, fonts);
   watch(paths.srcAllJs, javascript);
