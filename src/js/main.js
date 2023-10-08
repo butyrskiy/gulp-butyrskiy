@@ -1,1 +1,1 @@
-import "./components/component.js";
+import "./components/component";

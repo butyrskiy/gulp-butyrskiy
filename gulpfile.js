@@ -1,5 +1,4 @@
 // Todo. CONSTANTS
-// ? src - откуда берём, dest - куда складываем, watch - слежение за изменениями в файлах, parallel - параллельная работа функций, series - выполнение функций по очереди
 
 const { src, dest, watch, parallel, series } = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
@@ -29,7 +28,7 @@ const paths = {
   srcResourcesFolder: `${srcFolder}/resources`,
   srcImgFolder: `${srcFolder}/img`,
   buildImgFolder: `${buildFolder}/img`,
-  srcSvg: `${srcFolder}/img/svg-sprite/**.svg`,
+  srcSvg: `${srcFolder}/img/sprite/**.svg`,
   srcPartialsFolder: `${srcFolder}/partials`,
   srcFontsFolder: `${srcFolder}/resources/fonts`,
   buildFontsFolder: `${buildFolder}/fonts`,
@@ -38,22 +37,23 @@ const paths = {
   buildJsFolder: `${buildFolder}/js`,
 };
 
+// eslint-disable-next-line prefer-const
 let isProd = false; // dev by default
 
 // Todo. Functions
 // ? Компиляция файлов из scss в css
 function styles() {
-  return src(`${paths.srcScss}`) // забираем исходные scss
+  return src(`${paths.srcScss}`)
   .pipe(sourcemaps.init())
-  .pipe(sass({ // компиляция в css
+  .pipe(sass({
     outputStyle: 'expanded'
   }).on('error', sass.logError))
   .pipe(rename({
     suffix: '.min'
   }))
   .pipe(autoprefixer({ overrideBrowserslist: ['last 5 version'] }))
-  .pipe(sourcemaps.write('.')) // создание «main.min.css.map»
-  .pipe(dest(paths.buildCss)) // сюда кладём скомпилированный css
+  .pipe(sourcemaps.write('.'))
+  .pipe(dest(paths.buildCss))
   .pipe(browserSync.stream())
 }
 
@@ -153,7 +153,7 @@ function htmlInclude() {
     .pipe(browserSync.stream());
 }
 
-// ? Копированик файлов из «resources» в «build»
+// ? Копирование файлов из «resources» в «build»
 function resourcesToBuild() {
   return src([`${paths.srcResourcesFolder}/**`, `!${paths.srcFontsFolder}**/*.ttf`])
     .pipe(dest(buildFolder))
@@ -162,13 +162,13 @@ function resourcesToBuild() {
 // ? Обработка изображений
 // Для ковертации изображений в форматы .avif и .webp расскаментриуйте код ниже
 function images() {
-  return src([`${paths.srcImgFolder}/**/*`, '!src/img/svg-sprite/**.svg'])
+  return src([`${paths.srcImgFolder}/**/*`, '!src/img/sprite/**/*'])
     // .pipe(avif({ quality: 50 }))
 
     // .pipe(src(`${paths.srcImgFolder}/*.*`))
     // .pipe(webp())
 
-    .pipe(src([`${paths.srcImgFolder}/**/*`, '!src/img/svg-sprite/*']))
+    .pipe(src([`${paths.srcImgFolder}/**/*`, '!src/img/sprite/**/*']))
     .pipe(imagemin([
       imagemin.mozjpeg({quality: 85, progressive: true}),
     ]))
@@ -210,7 +210,7 @@ function cleanBuild() {
 function watchFiles() {
   browserSync.init({
     server: {
-      baseDir: buildFolder // папка за которой нужно следить
+      baseDir: buildFolder
     }
   });
 
